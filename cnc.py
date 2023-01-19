@@ -7,11 +7,13 @@ def main(args):
         print("Invalid argument: not a gcode file")
         return
 
-    lines = parse_file(file_path)
+    lines = parse_file_to_lines(file_path)
+    commands = parse_lines_to_commands(lines)
+    print(commands)
     
     
 
-def parse_file(file_path):
+def parse_file_to_lines(file_path):
     """ 
     Parses lines from a G-Code file.
 
@@ -24,7 +26,7 @@ def parse_file(file_path):
     """
 
     gcode_file = open(file_path)
-    lines = []
+    line_arr = []
 
     while True:
         line = gcode_file.readline()
@@ -35,9 +37,39 @@ def parse_file(file_path):
         if (line[0] == 'N'):
             line = line.strip()
             line = line.strip('\n')
-            lines.append(line.split(" "))
+            line_arr.append(line.split(" "))
+
+    gcode_file.close()
     
-    return lines
+    return line_arr
+
+def parse_lines_to_commands(lines):
+    """
+    Parses commands from an array of parsed G-Code lines.
+
+    Args:
+    lines (array): Array of parsed G-Code lines.
+
+    Returns:
+    commands (array): Array of commands.
+    """
+
+    command_arr = []
+    command_buffer = []
+    coordinate_args = {'X', 'Y', 'Z'}
+
+    for line in lines:
+        line_number = line[0]
+        line = line[1:]
+        for code in line:
+            if (code[0] in coordinate_args):
+                command_buffer.append(code)
+            else:
+                command_arr.append(command_buffer)
+                command_buffer = []
+                command_buffer.append(code)
+
+    return command_arr
 
 
 if __name__ == "__main__":
