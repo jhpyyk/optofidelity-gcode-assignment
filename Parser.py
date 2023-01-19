@@ -5,8 +5,18 @@ class Parser():
         self.last_z = 0.0
 
     def parse_file(self, file_path):
+        """
+        Parses a G-Code file into arrays of command and its arguments
+        (e.g. [G01, x=20.0, y=30.0, z=-5.0]).
+
+        Args:
+        file_path (string): Path to file.
+
+        Returns:
+        commands (array): Arrays of command and its arguments
+        """
         if (file_path[-6:] != '.gcode'):
-            print("Invalid argument: not a gcode file")
+            print("Invalid argument: not a G-Code (.gcode) file")
             return
 
         lines = self.parse_file_to_lines(file_path)
