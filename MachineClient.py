@@ -9,6 +9,7 @@ class MachineClient:
     def home(self):
         """ Moves machine to home position. """
         print("Moving to home.")
+        
     def move(self, x, y, z):
         """ Uses linear movement to move spindle to given XYZ coordinates.
 
