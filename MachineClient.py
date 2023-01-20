@@ -77,16 +77,9 @@ class MachineClient:
         """ Turns spindle coolant off. """
         print("Coolant turned off.")
 
-    def rapid_positioning(self, x, y, z):
-        """ Move spindle to given XYZ coordinates at max speed.
-        G-code: G00.
-
-        Args:
-        x (float): X axis absolute value [mm]
-        y (float): Y axis absolute value [mm]
-        z (float): Z axis absolute value [mm]
-        """
-        print("Moving to X={:.3f} Y={:.3f} Z={:.3f} [mm].".format(x, y, z))
+    def set_rapid_positioning(self):
+        """ Set rapid positioning. G-code: G00 """
+        print("Set rapid positioning.")
 
     def plane_XY(self):
         """ Set interpolation plane to XY. G-code: G17 """
@@ -131,3 +124,7 @@ class MachineClient:
     def set_incremental_programming(self):
         """ Set incremental programming. G-code: G91. """
         print("Set incremental programming.")
+
+    def set_linear_interpolation(self):
+        """ Set linear interpolation. G-code: G01. """
+        print("Set linear interpolation.")

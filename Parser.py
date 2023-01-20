@@ -17,8 +17,9 @@ class Parser:
         lines = self.parse_file_to_lines(file_path)
         commands = self.parse_lines_to_commands(lines)
         parsed_commands = self.parse_commands(commands)
+        merged = self.merge_commands(parsed_commands)
         
-        return parsed_commands
+        return merged
     
     
 
@@ -72,6 +73,7 @@ class Parser:
                 line = line[1:]
             
             arranged = self.arrange_commands(line)
+            arranged.append('$newline')
             command_arr.extend(arranged)
 
         return command_arr
@@ -144,6 +146,8 @@ class Parser:
                     parsed_commands.append(self.parse_coordinate(command))
                 case 'Z':
                     parsed_commands.append(self.parse_coordinate(command))
+                case '$':
+                    parsed_commands.append([command])
                 case _:
                     print("Command {} not implemented".format(command))
 
@@ -188,3 +192,29 @@ class Parser:
         """
         parsed = [command[0], {command[0].lower(): float(command[1:])}]
         return parsed
+
+    def merge_commands(self, commands):
+        """
+        Merges move commands.
+
+        Args:
+        commands (array): Array of commands.
+
+        Returns:
+        merged_commands (array): Merged commands.
+        """
+        merged_commands = []
+        buffer = ['move', {}]
+        for command in commands:
+            if (command[0] == '$newline'):
+                if (len(buffer[1]) > 0):
+                    merged_commands.append(buffer)
+                    buffer = ['move', {}]
+            elif (command[0][0] in {'X', 'Y', 'Z'}):
+                buffer[1].update(command[1])
+            else:
+                merged_commands.append(command)
+        
+        return merged_commands
+
+
