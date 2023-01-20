@@ -17,6 +17,16 @@ class MachineClient:
         """
         print("Moving to X={:.3f} Y={:.3f} Z={:.3f} [mm].".format(x, y, z))
 
+    def move_relative(self, x, y, z):
+        """ Uses linear movement to move spindle relative to current coordinates.
+
+        Args:
+        x (float): X axis relative value [mm]
+        y (float): Y axis relative value [mm]
+        z (float): Z axis relative value [mm]
+        """
+        print("Moving X={:.3f} Y={:.3f} Z={:.3f} [mm].".format(x, y, z))
+
 
     def move_x(self, value):
         """ Move spindle to given X coordinate. Keeps current Y and Z unchanged.
@@ -41,6 +51,30 @@ class MachineClient:
         value (float): Axis absolute value [mm]
         """
         print("Moving Z to {:.3f} [mm].".format(value))
+
+    def move_x_relative(self, value):
+        """ Move spindle to relative X coordinate. Keeps current Y and Z unchanged.
+
+        Args:
+        value (float): Axis relative value [mm]
+        """
+        print("Moving X {:.3f} [mm] relative to current position.".format(value))
+
+    def move_y_relative(self, value):
+        """ Move spindle to relative Y coordinate. Keeps current X and Z unchanged.
+
+        Args:
+        value(float): Axis relative value [mm]
+        """
+        print("Moving Y {:.3f} [mm] relative to current position.".format(value))
+
+    def move_z_relative(self, value):
+        """ Move spindle to relative Z coordinate. Keeps current X and Y unchanged.
+
+        Args:
+        value (float): Axis relative value [mm]
+        """
+        print("Moving Z {:.3f} [mm] relative to current position.".format(value))
 
     def set_feed_rate(self, value):
         """ Set spindle feed rate.
