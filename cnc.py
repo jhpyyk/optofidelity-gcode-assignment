@@ -2,7 +2,7 @@ import sys
 
 import MachineClient as MC
 import Parser
-
+"""
 COMMAND_TO_MC_STUB = {'G00' : move_logic,
                       'G17' : MC.plane_XY,
                       'G21' : MC.set_millimeters,
@@ -21,6 +21,7 @@ COMMAND_TO_MC_STUB = {'G00' : move_logic,
                       'G91' : MC.set_incremental_programming,
                       'G28' : MC.home
                       }
+"""
 
 def main(args):
     parser = Parser.Parser()

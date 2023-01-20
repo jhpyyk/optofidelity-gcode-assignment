@@ -64,23 +64,15 @@ class Parser:
         """
 
         command_arr = []
-        command_buffer = []
         coordinate_args = {'X', 'Y', 'Z'}
 
         for line in lines:
             if (line[0][0] == 'N'):
                 line_number = line[0]
                 line = line[1:]
-            for code in line:
-                if (code[0] in coordinate_args):
-                    command_buffer.append(code)
-                else:
-                    arranged = self.arrange_commands(command_buffer)
-                    command_arr.append(arranged)
-                    command_buffer = []
-                    command_buffer.append(code)
-
-        command_arr = command_arr[1:]
+            
+            arranged = self.arrange_commands(line)
+            command_arr.extend(arranged)
 
         return command_arr
 
@@ -105,11 +97,19 @@ class Parser:
         for command in commands:
             if (command[0][0] == 'G'):
                 arranged.append(command)
+        
+        for command in commands:
+            if (command[0][0] == 'X'):
+                arranged.append(command)
+        
+        for command in commands:
+            if (command[0][0] == 'Y'):
+                arranged.append(command)
 
         for command in commands:
-            if (command[0][0] in {'X', 'Y', 'Z'}):
+            if (command[0][0] == 'Z'):
                 arranged.append(command)
-    
+
         return arranged
 
     def parse_commands(self, commands):
@@ -127,51 +127,27 @@ class Parser:
         parsed_commands = []
         for command in commands:
 
-            match command[0][0]:
+            match command[0]:
                 case 'G':
-                    parsed_commands.append(self.parse_G(command))
+                    parsed_commands.append([command])
                 case 'T':
                     parsed_commands.append(self.parse_T(command))
                 case 'M':
-                    parsed_commands.append(command)
+                    parsed_commands.append([command])
                 case 'S':
                     parsed_commands.append(self.parse_S_F(command))
                 case 'F':
                     parsed_commands.append(self.parse_S_F(command))
+                case 'X':
+                    parsed_commands.append(self.parse_coordinate(command))
+                case 'Y':
+                    parsed_commands.append(self.parse_coordinate(command))
+                case 'Z':
+                    parsed_commands.append(self.parse_coordinate(command))
                 case _:
-                    print("Command {} not implemented".format(command[0]))
+                    print("Command {} not implemented".format(command))
 
         return parsed_commands
-
-
-    def parse_G(self, command):
-        """
-        Parses commands starting with a 'G'.
-
-        Args:
-        command (array): First element is command starting with a 'G'.
-
-        Returns:
-        parsed (array):
-        Command in form ['G-Code', {argument (string): value (float), ...}].
-        """
-
-        parsed = [command[0]]
-
-        if (len(command) == 1):
-            return parsed
-        
-        command = command[1:]
-        coordinate_args = {}
-
-        for code in command:
-            coordinate = code[0].lower()
-            value = float(code[1:])
-            coordinate_args.update({coordinate : value})
-        
-        parsed.append(coordinate_args)
-
-        return parsed
 
     def parse_T(self, command):
         """
@@ -184,7 +160,7 @@ class Parser:
         parsed (array): Command in form ['G-Code', {argument (string): value (string)}].
         """
 
-        parsed = [command[0][0], {'tool_name': command[0][1:]}]
+        parsed = [command[0], {'tool_name': command[1:]}]
         return parsed
 
     def parse_S_F(self, command):
@@ -197,5 +173,18 @@ class Parser:
         Returns:
         parsed (array): Command in form ['G-Code', {argument (string): value (float)}].
         """
-        parsed = [command[0][0], {'value': float(command[0][1:])}]
+        parsed = [command[0], {'value': float(command[1:])}]
+        return parsed
+
+    def parse_coordinate(self, command):
+        """
+        Parses commands starting with an 'X', 'Y' or 'Z'.
+
+        Args:
+        command (string): First letter is 'X', 'Y' or 'Z'.
+
+        Returns:
+        parsed (array): Command in form ['G-Code', {argument (string): value (float)}].
+        """
+        parsed = [command[0], {command[0].lower(): float(command[1:])}]
         return parsed
