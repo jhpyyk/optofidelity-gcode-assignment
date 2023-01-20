@@ -75,13 +75,42 @@ class Parser:
                 if (code[0] in coordinate_args):
                     command_buffer.append(code)
                 else:
-                    command_arr.append(command_buffer)
+                    arranged = self.arrange_commands(command_buffer)
+                    command_arr.append(arranged)
                     command_buffer = []
                     command_buffer.append(code)
 
         command_arr = command_arr[1:]
 
         return command_arr
+
+    def arrange_commands(self, commands):
+        arranged = []
+        for command in commands:
+            if (command[0][0] == 'F'):
+                arranged.append(command)
+
+        for command in commands:
+            if (command[0][0] == 'S'):
+                arranged.append(command)
+        
+        for command in commands:
+            if (command[0][0] == 'T'):
+                arranged.append(command)
+        
+        for command in commands:
+            if (command[0][0] == 'M'):
+                arranged.append(command)
+
+        for command in commands:
+            if (command[0][0] == 'G'):
+                arranged.append(command)
+
+        for command in commands:
+            if (command[0][0] in {'X', 'Y', 'Z'}):
+                arranged.append(command)
+    
+        return arranged
 
     def parse_commands(self, commands):
         """
@@ -152,10 +181,10 @@ class Parser:
         command (array): First element is command starting with a 'T'.
 
         Returns:
-        parsed (array): Command in form ['G-Code', {argument (string): value (float)}].
+        parsed (array): Command in form ['G-Code', {argument (string): value (string)}].
         """
 
-        parsed = [command[0][0], {'tool_name': float(command[0][1:])}]
+        parsed = [command[0][0], {'tool_name': command[0][1:]}]
         return parsed
 
     def parse_S_F(self, command):
