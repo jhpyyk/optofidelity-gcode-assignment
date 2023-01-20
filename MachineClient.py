@@ -1,7 +1,5 @@
 """ Simulates CNC machine control. """
 
-import time
-
 class MachineClient:
     def home(self):
         """ Moves machine to home position. """

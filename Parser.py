@@ -65,11 +65,9 @@ class Parser:
         """
 
         command_arr = []
-        coordinate_args = {'X', 'Y', 'Z'}
 
         for line in lines:
             if (line[0][0] == 'N'):
-                line_number = line[0]
                 line = line[1:]
             
             arranged = self.arrange_commands(line)
