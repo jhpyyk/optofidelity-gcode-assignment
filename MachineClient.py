@@ -74,7 +74,7 @@ class MachineClient:
         print("Coolant turned on.")
 
     def coolant_off(self):
-        """ Turns spindle coolant off. """
+        """ Turns spindle coolant off. G-code: M09."""
         print("Coolant turned off.")
 
     def set_rapid_positioning(self):
@@ -119,7 +119,7 @@ class MachineClient:
 
     def set_work_coordinate_system(self):
         """ Set work coordinate system. G-code: G54. """
-        print("Set work coordinate system")
+        print("Set work coordinate system.")
 
     def set_incremental_programming(self):
         """ Set incremental programming. G-code: G91. """
@@ -128,3 +128,11 @@ class MachineClient:
     def set_linear_interpolation(self):
         """ Set linear interpolation. G-code: G01. """
         print("Set linear interpolation.")
+
+    def stop_spindle(self):
+        """ Stop spindle. G-code: M05 """
+        print("Stop spindle.")
+
+    def end_program(self):
+        """ End program. G-code: M30 """
+        print("End program")
