@@ -1,4 +1,5 @@
 import time
+import sys
 
 import MachineClient
 import Parser
@@ -49,6 +50,10 @@ class Runner():
 
     def move_logic(self, **kwargs):
         """ Choose move function. """
+        if (self.absolute is None):
+            print("Programming mode not set (Absolute/Incremental). Exiting.")
+            sys.exit()
+
         if (len(kwargs) > 1):
             self.move_triple(**kwargs)
 
@@ -91,18 +96,21 @@ class Runner():
         if ('x' in kwargs):
             if (self.absolute):
                 self.machine_client.move_x(kwargs['x'])
+                self.last_x = kwargs['x']
             else:
                 self.machine_client.move_x_relative(kwargs['x'])
-            self.last_x = kwargs['x']
+                self.last_x += kwargs['x']
         if ('y' in kwargs):
             if (self.absolute):
                 self.machine_client.move_y(kwargs['y'])
+                self.last_y = kwargs['y']
             else:
                 self.machine_client.move_y_relative(kwargs['y'])
-            self.last_x = kwargs['y']
+                self.last_y += kwargs['y']
         if ('z' in kwargs):
             if (self.absolute):
                 self.machine_client.move_z(kwargs['z'])
+                self.last_z = kwargs['z']
             else:
                 self.machine_client.move_z_relative(kwargs['z'])
-            self.last_x = kwargs['z']
+                self.last_z += kwargs['z']

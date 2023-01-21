@@ -79,35 +79,39 @@ class Parser:
     def arrange_commands(self, commands):
         arranged = []
         for command in commands:
-            if (command[0][0] == 'F'):
+            if (command[0] == 'F'):
                 arranged.append(command)
 
         for command in commands:
-            if (command[0][0] == 'S'):
+            if (command[0] == 'S'):
                 arranged.append(command)
         
         for command in commands:
-            if (command[0][0] == 'T'):
+            if (command[0] == 'T'):
                 arranged.append(command)
         
         for command in commands:
-            if (command[0][0] == 'M'):
+            if (command[0] == 'M'):
                 arranged.append(command)
 
         for command in commands:
-            if (command[0][0] == 'G'):
+            if ((command[0] == 'G') and (command != 'G28')):
                 arranged.append(command)
         
         for command in commands:
-            if (command[0][0] == 'X'):
+            if (command[0] == 'X'):
                 arranged.append(command)
         
         for command in commands:
-            if (command[0][0] == 'Y'):
+            if (command[0] == 'Y'):
                 arranged.append(command)
 
         for command in commands:
-            if (command[0][0] == 'Z'):
+            if (command[0] == 'Z'):
+                arranged.append(command)
+
+        for command in commands:
+            if (command == 'G28'):
                 arranged.append(command)
 
         return arranged
@@ -121,7 +125,7 @@ class Parser:
 
         Returns:
         parsed_commands (array):
-        Array of commands in form ['G-Code', {argument (string): value (float)}].
+        Array of commands in form ['G-Code', {argument (string): value (any)}].
         """
         
         parsed_commands = []
@@ -203,16 +207,22 @@ class Parser:
         """
         merged_commands = []
         buffer = ['move', {}]
+        buffer_G28 = False
+
         for command in commands:
             if (command[0] == '$newline'):
                 if (len(buffer[1]) > 0):
                     merged_commands.append(buffer)
                     buffer = ['move', {}]
+                if (buffer_G28):
+                    merged_commands.append(['G28'])
+                    buffer_G28 = False
             elif (command[0][0] in {'X', 'Y', 'Z'}):
                 buffer[1].update(command[1])
+            elif (command[0] == 'G28'):
+                buffer_G28 = True
             else:
                 merged_commands.append(command)
-        
         return merged_commands
 
 
